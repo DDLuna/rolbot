@@ -1,5 +1,6 @@
 import Discord from "discord.io";
 import fs from "fs";
+import { brotliCompress } from "zlib";
 
 let token = "";
 try {
@@ -8,7 +9,7 @@ try {
   console.log(err);
 }
 
-const users = ["Dani", "Fede", "Brian", "Damo"];
+let players = ["Dani", "Fede", "Brian", "Damo"];
 
 const bot = new Discord.Client({
   token,
@@ -22,8 +23,10 @@ bot.on("ready", (event) => {
 
 bot.on("message", (user, userId, channelId, message, event) => {
   if (message.startsWith("!")) {
-    message = message.substring(1);
-    switch(message) {
+    bot.simulateTyping(channelId);
+
+    const [command, ...args] = message.substring(1).split(/[ ]+/);
+    switch(command) {
       case "ping":
         bot.sendMessage({
           to: channelId,
@@ -34,25 +37,38 @@ bot.on("message", (user, userId, channelId, message, event) => {
         let i = Math.floor(Math.random() * 4 + 1);
         bot.sendMessage({
           to: channelId,
-          message: users[i]
+          message: players[i]
         });
         return;
       case "start":
-        shuffle(users);
+        shuffle(players);
         bot.sendMessage({
           to: channelId,
-          message: "Orden: " + users.join(",") + "\n!d1000000",
+          message: "Orden: " + players.join(", ") + "\n!d1000000",
+        });
+        return;
+      case "add":
+        players = players.concat(args);
+        bot.sendMessage({
+          to: channelId,
+          message: "Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
+        })
+        return;
+      case "remove":
+        players = players.filter(player => !args.includes(player));
+        bot.sendMessage({
+          to: channelId,
+          message: "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
         });
         return;
     }
   
-    if (message.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
-      message = message.trim();
+    if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
       let results: number;
-      if (message.toLowerCase().startsWith("d")) {
-        results = rollDices(1, parseInt(message.substring(1), 10));
+      if (command.toLowerCase().startsWith("d")) {
+        results = rollDices(1, parseInt(command.substring(1), 10));
       } else {
-        results = 0;
+        results = rollDices(...findNumbers(command));
       }
 
       bot.sendMessage({
@@ -80,4 +96,15 @@ const shuffle = (a: any[]): any[] => {
       a[j] = x;
   }
   return a;
+}
+
+const findNumbers = (message: string): [number, number] => {
+  let i = 0;
+  while (message[i].toLowerCase() !== 'd') {
+    i++;
+  }
+  return [
+    parseInt(message.substring(0, i), 10),
+    parseInt(message.substring(i + 1, message.length), 10)
+  ];
 }
