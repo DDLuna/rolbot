@@ -34,10 +34,9 @@ bot.on("message", (user, userId, channelId, message, event) => {
         });
         return;
       case 'u':
-        let i = Math.floor(Math.random() * 4 + 1);
         bot.sendMessage({
           to: channelId,
-          message: players[i]
+          message: players[Math.floor(Math.random() * players.length + 1)]
         });
         return;
       case "start":
