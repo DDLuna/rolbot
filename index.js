@@ -1,16 +1,21 @@
-var Discord = require('discord.io');
-var logger = require('winston');
-var Math = require('mathjs');
+const Discord = require('discord.io');
+const logger = require('winston');
+const Math = require('mathjs');
+const fs = require('fs')
+
+let token = "";
+try {
+    token = fs.readFileSync("token.txt").toString();
+} catch (err) {
+    console.log("Failed to read token file: " + err);
+}
+
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console, {
     colorize: true
 });
 logger.level = 'debug';
-// Initialize Discord Bot
-
-const token = 'NjkxMTIyMjg1Nzc5NzQ2ODU2.XnbvmQ.CHGJKSkqSoIv1OhUODfF3nWOEVo';
-let stats = 0;
 
 var bot = new Discord.Client({
    token: token,
