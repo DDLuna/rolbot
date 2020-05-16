@@ -57,7 +57,8 @@ bot.on("message", (user, userId, channelId, message, event) => {
           message: "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
         });
         return;
-      case "f" || "fudge":
+      case "f":
+      case "fudge":
         bot.sendMessage({
           to: channelId,
           message: rollFudge() + " " + user,
