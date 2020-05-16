@@ -1,6 +1,5 @@
 import Discord from "discord.io";
 import fs from "fs";
-import { brotliCompress } from "zlib";
 
 let token = "";
 try {
