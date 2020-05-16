@@ -57,6 +57,7 @@ bot.on("message", (message) => {
         message.channel.send(rollFudge() + " " + message.author)
         return;
       case "shutdown":
+        message.channel.send("Adios");
         bot.destroy();
         return;
     }
