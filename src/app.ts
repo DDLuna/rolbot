@@ -16,141 +16,85 @@ bot.on("message", (message) => {
   const { content, author, channel } = message
   const { username }  = author;
 
-  if (!content.startsWith("!")) {
-    return;
-  }
-
-  const [command, ...args] = content.substring(1).split(/[ ]+/);
-  switch(command) {
-    case "ping":
-      channel.send("pong!");
-      return;
-    case 'u':
-      channel.send(players[Math.floor(Math.random() * players.length + 1)]);
-      return;
-    case "start":
-      shuffle(players);
-      channel.send("Orden: " + players.join(", ") + "\n!d1000000");
-      return;
-    case "addme":
-      if (players.includes(username)) {
-        channel.send("Ya eres un jugador");
-      } else {
-        players = players.concat(username);
-        channel.send("Agregado " + username + "\nJugadores: " + players.join(", "));
-      }
-      return;
-    case "removeme":
-      if (!players.includes(username)) {
-        channel.send("No estas incluido entre los jugadores");
-      } else {
-        players = players.filter(player => player !== username);
-        channel.send("Removido " + username + "\nJugadores: " + players.join(", "));
-      }
-      return;
-    case "add":
-      players = players.concat(args);
-      channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
-      return;
-    case "remove":
-      players = players.filter(player => !args.includes(player));
-      channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
-      return;
-    case "f":
-    case "fudge":
-      channel.send(rollFudge() + " " + username)
-      return;
-    case "shutdown":
-      shutdown(channel);
-      return;
-  }
-
-  if (command.match(/^([1-9][0-9]*)?(d|D)[0-9]+$/)) {
-    let results: number;
-    if (command.toLowerCase().startsWith("d")) {
-      results = rollDices(1, parseInt(command.substring(1), 10));
-    } else {
-      results = rollDices(...findNumbers(command));
-    }
-    channel.send(results + " " + username);
-    return;
   if (content.match(/^[0-9]+ [a-z]+$/i)){
     last = content.split(' ')[0];
     last = last !== '1' ? last : null;
     return;
   }
 
-  if (content.startsWith("!")) {
-    const [command, ...args] = content.substring(1).trim().split(/[ ]+/);
+  if (content.match(/silv(?:a|ita)/i) && author.username !== bot.user.username) {
+    channel.send(silvaResponse());
+    return;
+  }
+
+  if (!content.startsWith("!")) {
+    return;
+  }
+
+    const [command, ...args] = content.substring(1).split(/[ ]+/);
 
     switch(command) {
       case "ping":
-        message.channel.send("pong!");
+        channel.send("pong!");
         return;
       case 'ps':
-        message.channel.send(players.length > 0 ? "Jugadores: " + players.join(", ") : 'No hay jugadores u.u');
+        channel.send(players.length > 0 ? "Jugadores: " + players.join(", ") : 'No hay jugadores u.u');
         return;
       case 'rp':
-        message.channel.send(players.length > 0 ? 'Tira ' + players[Math.floor(Math.random() * players.length)] : 'No hay jugadores u.u');
+        channel.send(players.length > 0 ? 'Tira ' + players[Math.floor(Math.random() * players.length)] : 'No hay jugadores u.u');
         return;
       case 'ls':
         if (last) {
           let rol = rollDices(1, parseInt(last, 10));
-          message.channel.send(rol + " " + message.author.username);
+          channel.send(rol + " " + message.author.username);
         }
         return;
       case "start":
         shuffle(players);
-        message.channel.send("Orden: " + players.join(", ") + "\n!d1000000");
+        channel.send("Orden: " + players.join(", ") + "\n!d1000000");
         return;
       case "addme":
-        if (players.includes(user)) {
-          message.channel.send("Ya eres un jugador");
+        if (players.includes(username)) {
+          channel.send("Ya eres un jugador");
         } else {
-          players = players.concat(user);
-          message.channel.send("Agregado " + user + "\nJugadores: " + players.join(", "));
+          players = players.concat(username);
+          channel.send("Agregado " + username + "\nJugadores: " + players.join(", "));
         }
         return;
       case "removeme":
-        if (!players.includes(user)) {
-          message.channel.send("No estas incluido entre los jugadores");
+        if (!players.includes(username)) {
+          channel.send("No estas incluido entre los jugadores");
         } else {
-          players = players.filter(player => player !== user);
-          message.channel.send("Removido " + user + "\nJugadores: " + players.join(", "));
+          players = players.filter(player => player !== username);
+          channel.send("Removido " + username + "\nJugadores: " + players.join(", "));
         }
         return;
       case "add":
         players = players.concat(args);
-        message.channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+        channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "remove":
         players = players.filter(player => !args.includes(player));
-        message.channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+        channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "f":
       case "fudge":
-        message.channel.send(rollFudge() + " " + message.author.username)
+        channel.send(rollFudge() + " " + username)
         return;
       case "shutdown":
-        shutdown(message.channel);
+        shutdown(channel);
         return;
     }
 
-    if (command.match(/^([1-9][0-9]*)?[dD][0-9]+ *$/)) {
+    if (command.match(/^([1-9][0-9]*)?[dD][0-9]+$/)) {
       let results: number;
       if (command.toLowerCase().startsWith("d")) {
         results = rollDices(1, parseInt(command.substring(1), 10));
       } else {
         results = rollDices(...findNumbers(command));
       }
-      message.channel.send(results + " " + message.author.username);
+      channel.send(results + " " + username);
       return;
-    }
-  }
-
-  if (content.match(/silv(?:a|ita)/i) && user !== bot.user.username) {
-    message.channel.send(silvaResponse());
-    return;
   }
 });
 
