@@ -9,20 +9,37 @@ try {
 }
 
 let players: string[] = [];
+let last: string;
 const bot = new Discord.Client();
 
 bot.on("message", (message) => {
   let content = message.content;
   let user = message.author.username;
 
+  if (content.match(/^[0-9]+ [a-z]+$/i)){
+    last = content.split(' ')[0];
+    last = last !== '1' ? last : null;
+    return;
+  }
+
   if (content.startsWith("!")) {
-    const [command, ...args] = content.substring(1).split(/[ ]+/);
+    const [command, ...args] = content.substring(1).trim().split(/[ ]+/);
+
     switch(command) {
       case "ping":
         message.channel.send("pong!");
         return;
-      case 'u':
-        message.channel.send(players[Math.floor(Math.random() * players.length + 1)]);
+      case 'ps':
+        message.channel.send(players.length > 0 ? "Jugadores: " + players.join(", ") : 'No hay jugadores u.u');
+        return;
+      case 'rp':
+        message.channel.send(players.length > 0 ? 'Tira ' + players[Math.floor(Math.random() * players.length)] : 'No hay jugadores u.u');
+        return;
+      case 'ls':
+        if (last) {
+          let rol = rollDices(1, parseInt(last, 10));
+          message.channel.send(rol + " " + message.author.username);
+        }
         return;
       case "start":
         shuffle(players);
@@ -54,14 +71,14 @@ bot.on("message", (message) => {
         return;
       case "f":
       case "fudge":
-        message.channel.send(rollFudge() + " " + message.author)
+        message.channel.send(rollFudge() + " " + message.author.username)
         return;
       case "shutdown":
         shutdown(message.channel);
         return;
     }
-  
-    if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
+
+    if (command.match(/^([1-9][0-9]*)?[dD][0-9]+ *$/)) {
       let results: number;
       if (command.toLowerCase().startsWith("d")) {
         results = rollDices(1, parseInt(command.substring(1), 10));
@@ -72,7 +89,23 @@ bot.on("message", (message) => {
       return;
     }
   }
+
+  if (content.match(/silv(?:a|ita)/i) && user !== bot.user.username) {
+    message.channel.send(silvaResponse());
+    return;
+  }
 });
+
+const silvaResponse = () => {
+  let responses = [
+      'Que grande este Silva',
+      'Uh! Que pelotudes dijo Silva ahora?',
+      'Que boludo este Sila por Dios!',
+      'Ay lo tenes al pelotudo'
+  ]
+
+  return responses[Math.floor(Math.random() * responses.length)]
+}
 
 async function shutdown(channel: Discord.TextChannel | Discord.DMChannel): Promise<void> {
   await channel.send("Goodbye");
