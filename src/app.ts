@@ -1,4 +1,4 @@
-import Discord from "discord.io";
+import Discord from "discord.js";
 import fs from "fs";
 
 let token = "";
@@ -9,63 +9,37 @@ try {
 }
 
 let players: string[] = [];
+const bot = new Discord.Client();
 
-const bot = new Discord.Client({
-  token,
-  autorun: true,
-});
-
-bot.on("ready", (event) => {
-  console.log("Connected");
-  console.log("Logged as: " + bot.username + " (" + bot.id + ")");
-});
-
-bot.on("message", (user, userId, channelId, message, event) => {
-  if (message.startsWith("!")) {
-    const [command, ...args] = message.substring(1).split(/[ ]+/);
+bot.on("message", (message) => {
+  let content = message.content;
+  if (content.startsWith("!")) {
+    const [command, ...args] = content.substring(1).split(/[ ]+/);
     switch(command) {
       case "ping":
-        bot.sendMessage({
-          to: channelId,
-          message: "pong!",
-        });
+        message.channel.send("pong!");
         return;
       case 'u':
-        bot.sendMessage({
-          to: channelId,
-          message: players[Math.floor(Math.random() * players.length + 1)]
-        });
+        message.channel.send(players[Math.floor(Math.random() * players.length + 1)]);
         return;
       case "start":
         shuffle(players);
-        bot.sendMessage({
-          to: channelId,
-          message: "Orden: " + players.join(", ") + "\n!d1000000",
-        });
+        message.channel.send("Orden: " + players.join(", ") + "\n!d1000000");
         return;
       case "add":
         players = players.concat(args);
-        bot.sendMessage({
-          to: channelId,
-          message: "Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
-        })
+        message.channel.send((args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "remove":
         players = players.filter(player => !args.includes(player));
-        bot.sendMessage({
-          to: channelId,
-          message: "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
-        });
+        message.channel.send((args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "f":
       case "fudge":
-        bot.sendMessage({
-          to: channelId,
-          message: rollFudge() + " " + user,
-        })
+        message.channel.send(rollFudge() + " " + message.author)
         return;
       case "shutdown":
-        bot.disconnect();
+        bot.destroy();
         return;
     }
   
@@ -76,11 +50,7 @@ bot.on("message", (user, userId, channelId, message, event) => {
       } else {
         results = rollDices(...findNumbers(command));
       }
-
-      bot.sendMessage({
-        to: channelId,
-        message: results + " " + user,
-      });
+      message.channel.send(results + " " + message.author.username);
       return;
     }
   }
@@ -137,3 +107,9 @@ const rollFudge = (): string => {
   result = result.concat(" ) | total: " + total);
   return result;
 }
+
+bot.on("ready", () => {
+  console.log("Connected");
+});
+
+bot.login(token);
