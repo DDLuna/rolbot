@@ -22,7 +22,7 @@ bot.on("message", (message) => {
     return;
   }
 
-  if (content.match(/silv(?:a|ita)/i) && author.username !== bot.user.username) {
+  if (content.match(/silv(?:a|ita)/i) && username !== bot.user.username) {
     channel.send(silvaResponse());
     return;
   }
@@ -31,7 +31,7 @@ bot.on("message", (message) => {
     return;
   }
 
-    const [command, ...args] = content.substring(1).split(/[ ]+/);
+  const [command, ...args] = content.substring(1).split(/[ ]+/);
 
   switch (command) {
     case "ping":
@@ -45,8 +45,8 @@ bot.on("message", (message) => {
       return;
     case 'ls':
       if (last) {
-        let rol = rollDices(1, parseInt(last, 10));
-        channel.send(rol + " " + message.author.username);
+        const rol = rollDices(1, parseInt(last, 10));
+        channel.send(rol + " " + username);
       }
       return;
     case "start":
@@ -100,16 +100,15 @@ bot.on("message", (message) => {
 
 const silvaResponse = () => {
   let responses = [
-      'Que grande este Silva',
-      'Uh! Que pelotudes dijo Silva ahora?',
-      'Que boludo este Sila por Dios!',
-      'Ay lo tenes al pelotudo'
+    'Que grande este Silva',
+    'Uh! Que pelotudes dijo Silva ahora?',
+    'Que boludo este Sila por Dios!',
+    'Ay lo tenes al pelotudo'
   ]
-
   return responses[Math.floor(Math.random() * responses.length)]
 }
 
-async function shutdown(channel: Discord.TextChannel | Discord.DMChannel): Promise<void> {
+const shutdown = async (channel: Discord.TextChannel | Discord.DMChannel): Promise<void> => {
   await channel.send("Goodbye");
   bot.destroy();
 }
@@ -124,10 +123,10 @@ const rollDices = (amount: number, sides: number): number => {
 
 const shuffle = (a: any[]): any[] => {
   for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const x = a[i];
-      a[i] = a[j];
-      a[j] = x;
+    const j = Math.floor(Math.random() * (i + 1));
+    const x = a[i];
+    a[i] = a[j];
+    a[j] = x;
   }
   return a;
 }
