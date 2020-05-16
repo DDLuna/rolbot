@@ -4,7 +4,8 @@
   "description": "A friendly discord bot to roll some dice.",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc && node dist/app.js",
+    "start": "tsc && node dist/app.js",
+    "dev": "nodemon -e ts -w ./src/ -x 'tsc && node' dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damian Luna",
@@ -18,7 +19,9 @@
     "mathjs": "^6.6.1",
     "winston": "^3.2.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DDLuna/rolbot.git"

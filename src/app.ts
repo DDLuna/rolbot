@@ -13,6 +13,8 @@ const bot = new Discord.Client();
 
 bot.on("message", (message) => {
   let content = message.content;
+  let user = message.author.username;
+
   if (content.startsWith("!")) {
     const [command, ...args] = content.substring(1).split(/[ ]+/);
     switch(command) {
@@ -26,13 +28,29 @@ bot.on("message", (message) => {
         shuffle(players);
         message.channel.send("Orden: " + players.join(", ") + "\n!d1000000");
         return;
+      case "addme":
+        if (players.includes(user)) {
+          message.channel.send("Ya eres un jugador");
+        } else {
+          players = players.concat(user);
+          message.channel.send("Agregado " + user + "\nJugadores: " + players.join(", "));
+        }
+        return;
+      case "removeme":
+        if (!players.includes(user)) {
+          message.channel.send("No estas incluido entre los jugadores");
+        } else {
+          players = players.filter(player => player !== user);
+          message.channel.send("Removido " + user + "\nJugadores: " + players.join(", "));
+        }
+        return;
       case "add":
         players = players.concat(args);
-        message.channel.send((args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+        message.channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "remove":
         players = players.filter(player => !args.includes(player));
-        message.channel.send((args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+        message.channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
         return;
       case "f":
       case "fudge":
