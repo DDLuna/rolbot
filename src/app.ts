@@ -12,65 +12,67 @@ let players: string[] = [];
 const bot = new Discord.Client();
 
 bot.on("message", (message) => {
-  let content = message.content;
-  let user = message.author.username;
+  const { content, author, channel } = message
+  const { username }  = author;
 
-  if (content.startsWith("!")) {
-    const [command, ...args] = content.substring(1).split(/[ ]+/);
-    switch(command) {
-      case "ping":
-        message.channel.send("pong!");
-        return;
-      case 'u':
-        message.channel.send(players[Math.floor(Math.random() * players.length + 1)]);
-        return;
-      case "start":
-        shuffle(players);
-        message.channel.send("Orden: " + players.join(", ") + "\n!d1000000");
-        return;
-      case "addme":
-        if (players.includes(user)) {
-          message.channel.send("Ya eres un jugador");
-        } else {
-          players = players.concat(user);
-          message.channel.send("Agregado " + user + "\nJugadores: " + players.join(", "));
-        }
-        return;
-      case "removeme":
-        if (!players.includes(user)) {
-          message.channel.send("No estas incluido entre los jugadores");
-        } else {
-          players = players.filter(player => player !== user);
-          message.channel.send("Removido " + user + "\nJugadores: " + players.join(", "));
-        }
-        return;
-      case "add":
-        players = players.concat(args);
-        message.channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
-        return;
-      case "remove":
-        players = players.filter(player => !args.includes(player));
-        message.channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
-        return;
-      case "f":
-      case "fudge":
-        message.channel.send(rollFudge() + " " + message.author)
-        return;
-      case "shutdown":
-        shutdown(message.channel);
-        return;
-    }
-  
-    if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
-      let results: number;
-      if (command.toLowerCase().startsWith("d")) {
-        results = rollDices(1, parseInt(command.substring(1), 10));
-      } else {
-        results = rollDices(...findNumbers(command));
-      }
-      message.channel.send(results + " " + message.author.username);
+  if (!content.startsWith("!")) {
+    return;
+  }
+
+  const [command, ...args] = content.substring(1).split(/[ ]+/);
+  switch(command) {
+    case "ping":
+      channel.send("pong!");
       return;
+    case 'u':
+      channel.send(players[Math.floor(Math.random() * players.length + 1)]);
+      return;
+    case "start":
+      shuffle(players);
+      channel.send("Orden: " + players.join(", ") + "\n!d1000000");
+      return;
+    case "addme":
+      if (players.includes(username)) {
+        channel.send("Ya eres un jugador");
+      } else {
+        players = players.concat(username);
+        channel.send("Agregado " + username + "\nJugadores: " + players.join(", "));
+      }
+      return;
+    case "removeme":
+      if (!players.includes(username)) {
+        channel.send("No estas incluido entre los jugadores");
+      } else {
+        players = players.filter(player => player !== username);
+        channel.send("Removido " + username + "\nJugadores: " + players.join(", "));
+      }
+      return;
+    case "add":
+      players = players.concat(args);
+      channel.send("Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+      return;
+    case "remove":
+      players = players.filter(player => !args.includes(player));
+      channel.send("Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "));
+      return;
+    case "f":
+    case "fudge":
+      channel.send(rollFudge() + " " + username)
+      return;
+    case "shutdown":
+      shutdown(channel);
+      return;
+  }
+
+  if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
+    let results: number;
+    if (command.toLowerCase().startsWith("d")) {
+      results = rollDices(1, parseInt(command.substring(1), 10));
+    } else {
+      results = rollDices(...findNumbers(command));
     }
+    channel.send(results + " " + username);
+    return;
   }
 });
 
