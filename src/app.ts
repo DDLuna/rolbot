@@ -9,7 +9,7 @@ try {
   console.log(err);
 }
 
-let players = ["Dani", "Fede", "Brian", "Damo"];
+let players: string[] = [];
 
 const bot = new Discord.Client({
   token,
@@ -23,8 +23,6 @@ bot.on("ready", (event) => {
 
 bot.on("message", (user, userId, channelId, message, event) => {
   if (message.startsWith("!")) {
-    bot.simulateTyping(channelId);
-
     const [command, ...args] = message.substring(1).split(/[ ]+/);
     switch(command) {
       case "ping":
@@ -60,6 +58,9 @@ bot.on("message", (user, userId, channelId, message, event) => {
           message: "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
         });
         return;
+      case "shutdown":
+        bot.disconnect();
+        return
     }
   
     if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
