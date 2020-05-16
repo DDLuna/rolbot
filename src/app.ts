@@ -64,7 +64,7 @@ bot.on("message", (message) => {
       return;
   }
 
-  if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
+  if (command.match(/^([1-9][0-9]*)?(d|D)[0-9]+$/)) {
     let results: number;
     if (command.toLowerCase().startsWith("d")) {
       results = rollDices(1, parseInt(command.substring(1), 10));
