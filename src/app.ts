@@ -57,9 +57,15 @@ bot.on("message", (user, userId, channelId, message, event) => {
           message: "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + players.join(", "),
         });
         return;
+      case "f" || "fudge":
+        bot.sendMessage({
+          to: channelId,
+          message: rollFudge() + " " + user,
+        })
+        return;
       case "shutdown":
         bot.disconnect();
-        return
+        return;
     }
   
     if (command.match(/^ *([1-9][0-9]*)?(d|D)[0-9]+ *$/)) {
@@ -106,4 +112,27 @@ const findNumbers = (message: string): [number, number] => {
     parseInt(message.substring(0, i), 10),
     parseInt(message.substring(i + 1, message.length), 10)
   ];
+}
+
+const rollFudge = (): string => {
+  let result = "(";
+  let total = 0;
+  for (let i = 0; i < 4; i++) {
+    const num = Math.floor(Math.random() * 3);
+    switch (num) {
+      case 0:
+        result = result.concat(" -");
+        total--;
+        break;
+      case 1:
+        result = result.concat("  ");
+        break;
+      case 2:
+        result = result.concat(" +");
+        total++;
+        break;
+    }
+  }
+  result = result.concat(" ) | total: " + total);
+  return result;
 }
