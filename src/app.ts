@@ -16,7 +16,7 @@ bot.on("message", (message) => {
   const { content, author, channel } = message
   const { username }  = author;
 
-  if (content.match(/^[0-9]+ [a-z]+$/i)){
+    if (content.match(/^[0-9]+ [a-z]+$/i) && username === bot.user.username && players.includes(content.split(' ')[1])) {
     last = content.split(' ')[0];
     last = last !== '1' ? last : null;
     return;
