@@ -57,8 +57,7 @@ bot.on("message", (message) => {
         message.channel.send(rollFudge() + " " + message.author)
         return;
       case "shutdown":
-        message.channel.send("Adios");
-        bot.destroy();
+        shutdown(message.channel);
         return;
     }
   
@@ -74,6 +73,11 @@ bot.on("message", (message) => {
     }
   }
 });
+
+async function shutdown(channel: Discord.TextChannel | Discord.DMChannel): Promise<void> {
+  await channel.send("Goodbye");
+  bot.destroy();
+}
 
 const rollDices = (amount: number, sides: number): number => {
   let total = 0;
