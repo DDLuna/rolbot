@@ -1,11 +1,36 @@
 import Discord from "discord.js";
 import fs from "fs";
 
+const helpMessage = {
+  embed: {
+    color: 3447003,
+    fields: [{
+      name: "Comandos",
+      value:
+          "\n`!ping` Devuelve un Pong!" +
+          "\n`!addme` Me agrega a la lista de jugadores" +
+          "\n`!removeme` Me elimina de la lista de jugadores" +
+          "\n`!add [name]` Agrega un jugador a la lista de jugadores" +
+          "\n`!remove [name]` Elimina jugador de la lista de jugadores" +
+          "\n`!players` Lista los jugadores" +
+          "\n`!start` Inicia una ronda" +
+          "\n`!whostarts?` Elige un jugador random para que tire" +
+          "\n`!last` Rerolea con el ultimo numero"
+    }],
+  }
+};
+
+let config: { token: string, prefix: string };
+let prefix = "";
 let token = "";
+
 try {
-  token = fs.readFileSync("./token.txt").toString();
-} catch (err) {
-  console.log(err);
+    config = require("../config.json");
+    prefix = config.prefix;
+    token = config.token;
+} catch (e) {
+    console.log(e.message);
+    process.exit(1);
 }
 
 let players: string[] = [];
@@ -27,7 +52,7 @@ bot.on("message", (message) => {
     return;
   }
 
-  if (!content.startsWith("!")) {
+  if (!content.startsWith(prefix)) {
     return;
   }
 
@@ -37,13 +62,16 @@ bot.on("message", (message) => {
     case "ping":
       channel.send("pong!");
       return;
-    case 'ps':
+    case "help":
+      channel.send(helpMessage);
+      return;
+    case 'players':
       channel.send(players.length > 0 ? "Jugadores: " + players.join(", ") : 'No hay jugadores u.u');
       return;
-    case 'rp':
+    case 'whostarts?':
       channel.send(players.length > 0 ? 'Tira ' + players[Math.floor(Math.random() * players.length)] : 'No hay jugadores u.u');
       return;
-    case 'ls':
+    case 'last':
       if (last) {
         const rol = rollDices(1, parseInt(last, 10));
         channel.send(rol + " " + username);

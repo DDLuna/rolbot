@@ -1,5 +1,13 @@
 # rolbot
-Create a `token.txt` file in project root containing a discord token, then run:
+Create a `config.json` file like the following example in project root 
+ ```json
+{
+    "token": "insert-bot-token-here",
+    "prefix": "!"
+}
+```
+ 
+ Then run:
 
 `npm install`
 
