@@ -3,6 +3,7 @@
         "lib": ["ES2019"],
         "module": "CommonJS",
         "target": "ES2019",
+        "resolveJsonModule": true,
         "noImplicitAny": true,
         "removeComments": true,
         "esModuleInterop": true,
