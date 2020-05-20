@@ -4,12 +4,16 @@ import Discord from "discord.js"
 export default class DeathRollGame extends Command {
 
   private players: string[];
-  private last: number;
+
+  constructor(nextCommand: Command) {
+    super(nextCommand);
+    this.players = [];
+  }
 
   protected isMyMessage(cmd: string): boolean {
     switch(cmd) {
       case "players":
-      case "whostarts":
+      case "whostarts?":
       case "start":
       case "addme":
       case "removeme":
@@ -28,9 +32,9 @@ export default class DeathRollGame extends Command {
     
     switch(command) {
       case "players":
-        return this.players ? "Jugadores: " + this.players.join(", ") : 'No hay jugadores u.u';
+        return this.players.length > 0 ? "Jugadores: " + this.players.join(", ") : 'No hay jugadores u.u';
       case 'whostarts?':
-        return this.players ? 'Tira ' + this.players[Math.floor(Math.random() * this.players.length)] : 'No hay jugadores u.u';
+        return this.players.length > 0 ? 'Tira ' + this.players[Math.floor(Math.random() * this.players.length)] : 'No hay jugadores u.u';
       case "start":
         shuffle(this.players);
         return `Orden: ${this.players.join(", ")}\n!d1000000`;
@@ -52,8 +56,6 @@ export default class DeathRollGame extends Command {
       case "remove":
         this.players = this.players.filter(player => !args.includes(player));
         return "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + this.players.join(", ");
-      case "last":
-
     }
   }
 }

@@ -31,9 +31,7 @@ bot.on("message", (message) => {
   if (!content.startsWith(prefix)) {
     return;
   }
-  console.log(message.content);
   message.content = message.content.substring(prefix.length);
-  console.log(message.content);
   const args = content.substring(1).split(/[ ]+/);
   const command = args[0];
   if (command === "shutdown") {
