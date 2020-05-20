@@ -1,6 +1,6 @@
 import Discord from "discord.js"
 import config from "../config.json"
-import RollDice from "./commands/Rolldice"
+import RollDice from "./commands/RollDice"
 import HelpMessage from "./commands/HelpMessage"
 import DeathRollGame from "./commands/DeathRollGame"
 import FudgeRoll from "./commands/FudgeRoll"
@@ -8,25 +8,10 @@ import FudgeRoll from "./commands/FudgeRoll"
 const { token, prefix } = config;
 const bot = new Discord.Client();
 
-const silvaResponse = () => {
-  let responses = [
-    'Que grande este Silva',
-    'Uh! Que pelotudes dijo Silva ahora?',
-    'Que boludo este Sila por Dios!',
-    'Ahí lo tenes al pelotudo'
-  ]
-  return responses[Math.floor(Math.random() * responses.length)]
-}
-
 const chain = new RollDice(new DeathRollGame(new FudgeRoll(new HelpMessage(null))));
 
 bot.on("message", (message) => {
   const { content, author, channel } = message
-
-  if (content.match(/silv(?:a|ita)/i) && author.username !== bot.user.username) {
-    channel.send(silvaResponse());
-    return;
-  }
 
   if (!content.startsWith(prefix)) {
     return;
