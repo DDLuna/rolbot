@@ -10,12 +10,16 @@ export default class RollDice extends Command {
   protected action(message: Discord.Message | Discord.PartialMessage): string {
     let results: number;
     const { content, author } = message;
-    if (content.toLowerCase().startsWith("d")) {
+    if (content.startsWith("d")) {
       results = rollDices(1, parseInt(content.substring(1), 10));
     } else {
       results = rollDices(...findNumbers(content));
     }
-    return results.toString() + ` <@!${author.id}>`;
+    let skull = "";
+    if (results === 1) {
+      skull = " ☠"
+    }
+    return results.toString() + ` <@!${author.id}>${skull}`;
   }
 }
 
@@ -29,7 +33,7 @@ const rollDices = (amount: number, sides: number): number => {
 
 const findNumbers = (message: string): [number, number] => {
   let i = 0;
-  while (message[i].toLowerCase() !== 'd') {
+  while (message[i] !== "d") {
     i++;
   }
   return [

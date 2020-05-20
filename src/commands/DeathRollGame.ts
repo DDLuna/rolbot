@@ -32,30 +32,28 @@ export default class DeathRollGame extends Command {
     
     switch(command) {
       case "players":
-        return this.players.length > 0 ? "Jugadores: " + this.players.join(", ") : 'No hay jugadores u.u';
-      case 'whostarts?':
-        return this.players.length > 0 ? 'Tira ' + this.players[Math.floor(Math.random() * this.players.length)] : 'No hay jugadores u.u';
+        return this.players.length > 0 ? "Players: " + this.players.join(", ") : 'There are no players u.u';
       case "start":
         shuffle(this.players);
-        return `Orden: ${this.players.join(", ")}\n!d1000000`;
+        return `Orden: ${this.players.join(", ")}\nType !d1000000 to start`;
       case "addme":
         if (this.players.includes(username)) {
-          return "Ya eres un jugador";
+          return "You're already a player";
         }
         this.players.push(username);
-        return "Agregado " + username + "\nJugadores: " + this.players.join(", ");
+        return "Added " + username + "\nCurrent players: " + this.players.join(", ");
       case "removeme":
         if (!this.players.includes(username)) {
-          return "No estas incluido entre los jugadores";
+          return "You're not a player, but pretend I removed you anyway";
         }
         this.players = this.players.filter(player => player !== username);
-        return "Removido " + username + "\nJugadores: " + this.players.join(", ");
+        return "Removed " + username + "\nPlayers: " + this.players.join(", ");
       case "add":
         this.players = this.players.concat(args);
-        return "Agregado" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + this.players.join(", ");
+        return "Added" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nPlayers: " + this.players.join(", ");
       case "remove":
         this.players = this.players.filter(player => !args.includes(player));
-        return "Removido" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nJugadores: " + this.players.join(", ");
+        return "Removed" + (args.length > 1 ? "s " : " ") + args.join(", ") + "\nPlayers: " + this.players.join(", ");
     }
   }
 }

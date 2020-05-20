@@ -4,8 +4,8 @@
   "description": "A friendly discord bot to roll some dice.",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
-    "dev": "nodemon -e ts -w ./src/ -x \"tsc && node dist/app.js\"",
+    "start": "tsc && node dist/src/app.js",
+    "dev": "nodemon -e ts -w ./src/ -x \"tsc && node dist/src/app.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damian Luna",

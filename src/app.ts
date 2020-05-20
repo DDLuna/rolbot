@@ -11,12 +11,12 @@ const bot = new Discord.Client();
 const chain = new RollDice(new DeathRollGame(new FudgeRoll(new HelpMessage(null))));
 
 bot.on("message", (message) => {
-  const { content, author, channel } = message
+  const { content, channel } = message
 
   if (!content.startsWith(prefix)) {
     return;
   }
-  message.content = message.content.substring(prefix.length);
+  message.content = message.content.substring(prefix.length).toLowerCase();
   const args = content.substring(1).split(/[ ]+/);
   const command = args[0];
   if (command === "shutdown") {
