@@ -5,11 +5,12 @@ import HelpMessage from "./commands/HelpMessage"
 import DeathRollGame from "./commands/DeathRollGame"
 import FudgeRoll from "./commands/FudgeRoll"
 import DevInfo from "./commands/DevInfo"
+import TicTacToe from "./commands/TicTacToe";
 
 const { token, prefix } = config;
 const bot = new Discord.Client();
 
-const chain = new RollDice(new DeathRollGame(new FudgeRoll(new HelpMessage(new DevInfo(null)))));
+const chain = new RollDice(new DeathRollGame(new TicTacToe(new FudgeRoll(new HelpMessage(new DevInfo(null))))));
 
 bot.on("message", (message) => {
   const { content, channel } = message

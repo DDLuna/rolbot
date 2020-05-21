@@ -4,12 +4,16 @@ export default abstract class Command {
 
   private nextCommand: Command;
 
-  constructor(nextCommand: Command) {
+  constructor(nextCommand: Command = null) {
     this.nextCommand = nextCommand;
   }
   
   protected abstract isMyMessage(cmd: string): boolean;
   protected abstract action(message: Discord.Message | Discord.PartialMessage): string;
+
+  public setNextCommand(command: Command) {
+    this.nextCommand = command;
+  }
 
   public execute(cmd: string, args: Discord.Message | Discord.PartialMessage): string {
     return this.isMyMessage(cmd) ? this.action(args) : this.next(cmd, args);

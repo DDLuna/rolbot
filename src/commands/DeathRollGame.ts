@@ -5,7 +5,7 @@ export default class DeathRollGame extends Command {
 
   private players: string[];
 
-  constructor(nextCommand: Command) {
+  constructor(nextCommand: Command = null) {
     super(nextCommand);
     this.players = [];
   }
