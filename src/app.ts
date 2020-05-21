@@ -9,7 +9,13 @@ import TicTacToe from "./commands/TicTacToe";
 const { token, prefix } = config;
 const bot = new Discord.Client();
 
-const chain = new RollDice(new DeathRollGame(new FudgeRoll(new TicTacToe(new HelpMessage(null)))));
+const commands = [new HelpMessage(), new TicTacToe(),  new FudgeRoll(), new DeathRollGame(), new RollDice()];
+
+for (let i = 1; i < commands.length ; i++) {
+  commands[i].setNextCommand(commands[i-1]);
+}
+
+const chain = commands[commands.length - 1];
 
 bot.on("message", (message) => {
   const { content, channel } = message

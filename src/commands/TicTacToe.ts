@@ -3,16 +3,21 @@ import Discord from "discord.js";
 
 export default class TicTacToe extends Command {
 
-  private table = [[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']];
+  private table: string[][] ;
+
+  constructor(command: Command = null) {
+    super(command);
+    this.table = [[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']];
+  }
 
   protected isMyMessage(cmd: string): boolean {
-    return !!cmd.match( /^[oOxX]/) || cmd === 'clean';
+    return !!cmd.match( /^[oOxX]/) || cmd === 'tictactoe';
   }
 
   protected action(message: Discord.Message | Discord.PartialMessage): string {
     const {content, author } = message;
 
-    if (content.split(/[ ]/)[0] == 'clean') {
+    if (content.split(/[ ]/)[0] == 'tictactoe') {
       this.table = [[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']];
     } else if (content.match(/^[oOxX] [1-3][1-3] */)) {
       const [letter, position] = content.split(/[ ]/);
