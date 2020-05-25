@@ -13,8 +13,7 @@ const bot = new Discord.Client();
 const chain = new RollDice(new DeathRollGame(new TicTacToe(new FudgeRoll(new HelpMessage(new DevInfo(null))))));
 
 bot.on("message", (message) => {
-  const { content, channel } = message
-
+  const { content, channel } = message;
   if (!content.startsWith(prefix)) {
     return;
   }
