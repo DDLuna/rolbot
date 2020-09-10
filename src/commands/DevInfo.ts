@@ -7,7 +7,7 @@ export default class DevInfo extends Command {
     return cmd === "info" || cmd === "dev";
   }
   protected action(message: Discord.Message | Discord.PartialMessage): string {
-    return "Developed by Damian Luna 🌑, you can find the source code here: https://github.com/DDLuna/rolbot"
+    return "Developed by Damian Luna 🌑 and Fede Romero.\nYou can find the source code here: https://github.com/DDLuna/rolbot"
   }
 
 }
